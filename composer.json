@@ -2,7 +2,7 @@
     "name": "webit/bcmath",
     "description": "Object wrapper for PHP BcMath Library",
     "type" : "library",
-    "licence" : "MIT",
+    "license" : "MIT",
     "keywords" : "bcmath, big numeric",
     "authors" : [{
     	"name" : "Daniel Bojdo", "email" : "daniel.bojdo@web-it.eu"
