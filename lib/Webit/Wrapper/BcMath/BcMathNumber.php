@@ -218,7 +218,6 @@ class BcMathNumber {
 		ob_start();
 		switch($operation) {
 			case self::OPERATION_ADD:
-				echo 'ble';
 				$result = bcadd($left,$right,$scale);
 			break;
 			case self::OPERATION_SUB:
