@@ -1,14 +1,15 @@
 {
     "name": "webit/bcmath",
     "description": "Object wrapper for PHP BcMath Library",
-    "type" : "library",
-    "license" : "MIT",
-    "keywords" : ["bcmath", "big numeric"],
-    "authors" : [{
-    	"name" : "Daniel Bojdo", "email" : "daniel.bojdo@web-it.eu"
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["bcmath", "big numeric"],
+    "authors": [{
+    	"name": "Daniel Bojdo",
+        "email": "daniel.bojdo@web-it.eu"
     }],
     "autoload": {
-        "psr-0": { "Webit\\Wrapper\\BcMath": "lib/" }
+        "psr-4": { "Webit\\Wrapper\\BcMath\\": "lib/" }
     },
     "require": {
         "php": ">=5.3.3"
