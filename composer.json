@@ -12,7 +12,8 @@
         "psr-4": { "Webit\\Wrapper\\BcMath\\": "lib/" }
     },
     "require": {
-        "php": ">=5.3.3"
+        "php": ">=5.3.3",
+        "ext-bc": "*"
     },
     "extra": {
         "branch-alias": {

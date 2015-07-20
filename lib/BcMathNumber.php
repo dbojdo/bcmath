@@ -17,15 +17,22 @@ class BcMathNumber
     const OPERATION_SQRT = 'sqrt';
     const OPERATION_COMPARE = 'compare';
 
-    /**
-     * @var int
-     */
-    protected static $defaultScale = 8;
+    private static $operationsMap = array(
+        self::OPERATION_ADD => 'bcadd',
+        self::OPERATION_SUB => 'bcsub',
+        self::OPERATION_MUL => 'bcmul',
+        self::OPERATION_DIV => 'bcdiv',
+        self::OPERATION_POW => 'bcpow',
+        self::OPERATION_MOD => 'bcmod',
+        self::OPERATION_POWMOD => 'bcpowmod',
+        self::OPERATION_SQRT => 'bcsqrt',
+        self::OPERATION_COMPARE => 'bccomp'
+    );
 
     /**
      * @var int
      */
-    protected $scale;
+    private static $defaultScale = 8;
 
     /**
      *
@@ -36,12 +43,10 @@ class BcMathNumber
     /**
      *
      * @param BcMathNumber|string $num
-     * @param int $scale
      */
-    public function __construct($num = '0', $scale = null)
+    public function __construct($num = '0')
     {
-        $this->value = $num instanceof self ? (string)$num : $this->filterNum($num);
-        $this->scale = $this->filterScale($scale);
+        $this->value = $num instanceof self ? (string) $num : self::filterNum($num);
     }
 
     /**
@@ -52,7 +57,7 @@ class BcMathNumber
      */
     public function add($num, $scale = null)
     {
-        return $this->performOperation(self::OPERATION_ADD, $num, null, $scale);
+        return self::create($this->performOperation(self::OPERATION_ADD, $num, null, $scale));
     }
 
     /**
@@ -63,7 +68,7 @@ class BcMathNumber
      */
     public function sub($num, $scale = null)
     {
-        return $this->performOperation(self::OPERATION_SUB, $num, null, $scale);
+        return self::create($this->performOperation(self::OPERATION_SUB, $num, null, $scale));
     }
 
     /**
@@ -74,7 +79,7 @@ class BcMathNumber
      */
     public function mul($num, $scale = null)
     {
-        return $this->performOperation(self::OPERATION_MUL, $num, null, $scale);
+        return self::create($this->performOperation(self::OPERATION_MUL, $num, null, $scale));
     }
 
     /**
@@ -85,7 +90,7 @@ class BcMathNumber
      */
     public function div($num, $scale = null)
     {
-        return $this->performOperation(self::OPERATION_DIV, $num, null, $scale);
+        return self::create($this->performOperation(self::OPERATION_DIV, $num, null, $scale));
     }
 
     /**
@@ -96,7 +101,7 @@ class BcMathNumber
      */
     public function pow($num, $scale = null)
     {
-        return $this->performOperation(self::OPERATION_POW, $num, null, $scale);
+        return self::create($this->performOperation(self::OPERATION_POW, $num, null, $scale));
     }
 
     /**
@@ -108,7 +113,7 @@ class BcMathNumber
      */
     public function powmod($num, $mod, $scale = null)
     {
-        return $this->performOperation(self::OPERATION_POW, $num, $mod, $scale);
+        return self::create($this->performOperation(self::OPERATION_POWMOD, $num, $mod, $scale));
     }
 
     /**
@@ -118,7 +123,7 @@ class BcMathNumber
      */
     public function sqrt($scale = null)
     {
-        return $this->performOperation(self::OPERATION_SQRT, null, null, $scale);
+        return self::create($this->performOperation(self::OPERATION_SQRT, null, null, $scale));
     }
 
     /**
@@ -129,18 +134,17 @@ class BcMathNumber
      */
     public function mod($num, $scale = null)
     {
-        return $this->performOperation(self::OPERATION_MOD, $num, null, $scale);
+        return self::create($this->performOperation(self::OPERATION_MOD, $num, null, $scale));
     }
 
     /**
      *
      * @param string $num
-     * @param int $scale
      * @return BcMathNumber
      */
-    public static function create($num, $scale = null)
+    public static function create($num)
     {
-        return new self($num, $scale);
+        return new self($num);
     }
 
     /**
@@ -153,7 +157,7 @@ class BcMathNumber
     {
         $result = $this->performOperation(self::OPERATION_COMPARE, $num, null, $scale);
 
-        return (int)$result->getValue();
+        return (int) $result;
     }
 
     /**
@@ -217,97 +221,31 @@ class BcMathNumber
      * @param BcMathNumber|string $num
      * @param int $scale
      * @param BcMathNumber|string $mod
-     * @return BcMathNumber
+     * @return string
      */
     private function performOperation($operation, $num = null, $mod = null, $scale = null)
     {
         $left = $this->getValue();
-        $right = $num instanceof self ? $num->getValue() : $this->filterNum($num);
-        $mod = $mod instanceof self ? $num->getValue() : $this->filterNum($mod);
+        $right = $num instanceof self ? $num->getValue() : self::filterNum($num);
+        $mod = $mod instanceof self ? $num->getValue() : self::filterNum($mod);
+        $scale = (int) ($scale ?: self::$defaultScale);
 
-        $scale = $this->filterScale($scale);
+        $args = array($left, $right, $scale);
+        if ($operation == self::OPERATION_POWMOD) {
+            $args = array($left, $right, $mod, $scale);
+        }
+
+        $func = self::$operationsMap[$operation];
 
         ob_start();
-        switch ($operation) {
-            case self::OPERATION_ADD:
-                $result = bcadd($left, $right, $scale);
-                break;
-            case self::OPERATION_SUB:
-                $result = bcsub($left, $right, $scale);
-                break;
-            case self::OPERATION_MUL:
-                $result = bcmul($left, $right, $scale);
-                break;
-            case self::OPERATION_DIV:
-                $result = bcdiv($left, $right, $scale);
-                break;
-            case self::OPERATION_POW:
-                $result = bcpow($left, $right, $scale);
-                break;
-            case self::OPERATION_MOD:
-                $result = bcmod($left, $right, $scale);
-                break;
-            case self::OPERATION_POWMOD:
-                $mod = $this->filterNum($mod);
-                $result = bcmod($left, $right, $mod, $scale);
-                break;
-            case self::OPERATION_SQRT:
-                $result = bcsqrt($left, $scale);
-                break;
-            case self::OPERATION_COMPARE:
-                $result = bccomp($left, $right, $scale);
-                break;
-        }
+        $result = call_user_func_array($func, $args);
         $error = ob_get_flush();
 
         if ($error) {
             throw new BcMathException($error);
         }
 
-        if (false == isset($result)) {
-            throw new BcMathException(
-                sprintf('Unknown or unsupported bcmath operation: "%s"', $operation)
-            );
-        }
-
-        return self::create($result);
-    }
-
-    /**
-     *
-     * @param int $scale
-     * @return int
-     */
-    private function filterScale($scale)
-    {
-        if ($scale == null) {
-            $scale = $this->scale ?: self::$defaultScale;
-        }
-
-        return (int)$scale;
-    }
-
-    /**
-     *
-     * @param string $num
-     * @return string
-     */
-    private function filterNum($num)
-    {
-        return preg_replace(
-            array('/,/', '/[^\-0-9\.]/'),
-            array('.', ''),
-            (string)$num
-        );
-    }
-
-    /**
-     *
-     * @param string $value
-     */
-    public function setValue($value)
-    {
-        $this->value = $value;
+        return $result;
     }
 
     /**
@@ -319,20 +257,21 @@ class BcMathNumber
     }
 
     /**
-     *
-     * @param int $scale
+     * @return string
      */
-    public function setScale($scale)
+    public function __toString()
     {
-        $this->scale = (int)$scale;
+        return (string) $this->value;
     }
 
     /**
-     * @return int
+     *
+     * @param string $num
+     * @return string
      */
-    public function getScale()
+    private static function filterNum($num)
     {
-        return $this->scale;
+        return preg_replace(array('/,/', '/[^\-0-9\.]/'), array('.', ''), (string) $num);
     }
 
     /**
@@ -349,13 +288,5 @@ class BcMathNumber
     public static function getDefaultScale()
     {
         return self::$defaultScale;
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return (string)$this->value . "\n";
     }
 }
