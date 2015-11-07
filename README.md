@@ -24,7 +24,7 @@ Composer: add the **webit/bcmath** into **composer.json**
 ```
 
 ## Release note
-This version 1.1 breaks a backward compatibility. Until now **BcMathNumber**:
+This version 1.1 breaks a backward compatibility. Since now **BcMathNumber**:
  * is immutable (removed *setValue* method)
  * has no instance property *scale* (removed instance methods *getScale* / *setScale*) as number itself can't have a *scale*
 
