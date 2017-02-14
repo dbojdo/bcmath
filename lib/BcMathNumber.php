@@ -265,6 +265,14 @@ class BcMathNumber
     }
 
     /**
+     * @return float
+     */
+    public function toFloat()
+    {
+        return (float) $this->value;
+    }
+
+    /**
      *
      * @param string $num
      * @return string
