@@ -9,8 +9,8 @@ Composer: add the **webit/bcmath** into **composer.json**
 ```json
 {
     "require": {
-        "php":              ">=5.3.2",
-        "webit/bcmath": "~1.1"
+        "php": ">=5.3.2",
+        "webit/bcmath": "^1.2.0"
     }
 }
 ```
@@ -29,3 +29,10 @@ This version 1.1 breaks a backward compatibility. Since now **BcMathNumber**:
  * has no instance property *scale* (removed instance methods *getScale* / *setScale*) as number itself can't have a *scale*
 
 To use previous version see tag 1.0.0 [https://github.com/dbojdo/bcmath/tree/1.0.0](https://github.com/dbojdo/bcmath/tree/1.0.0 "Tag 1.0.0")
+
+## Tests
+
+```bash
+docker-compose run --rm src composer install
+docker-compose run --rm phpunit
+```
