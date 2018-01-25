@@ -228,7 +228,7 @@ class BcMathNumber
         $left = $this->getValue();
         $right = $num instanceof self ? $num->getValue() : self::filterNum($num);
         $mod = $mod instanceof self ? $num->getValue() : self::filterNum($mod);
-        $scale = (int) ($scale ?: self::$defaultScale);
+        $scale = (int) (null === $scale ? self::$defaultScale : $scale);
 
         $args = array($left, $right, $scale);
         if ($operation == self::OPERATION_POWMOD) {
