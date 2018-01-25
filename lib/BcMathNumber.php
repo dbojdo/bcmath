@@ -94,7 +94,6 @@ class BcMathNumber
     }
 
     /**
-     *
      * @param BcMathNumber|string $num
      * @param int $scale
      * @return BcMathNumber
@@ -129,12 +128,11 @@ class BcMathNumber
     /**
      *
      * @param BcMathNumber|string $num
-     * @param int $scale
      * @return BcMathNumber
      */
-    public function mod($num, $scale = null)
+    public function mod($num)
     {
-        return self::create($this->performOperation(self::OPERATION_MOD, $num, null, $scale));
+        return self::create($this->performOperation(self::OPERATION_MOD, $num, null));
     }
 
     /**
@@ -230,9 +228,18 @@ class BcMathNumber
         $mod = $mod instanceof self ? $num->getValue() : self::filterNum($mod);
         $scale = (int) ($scale ?: self::$defaultScale);
 
-        $args = array($left, $right, $scale);
-        if ($operation == self::OPERATION_POWMOD) {
-            $args = array($left, $right, $mod, $scale);
+        switch($operation) {
+            case self::OPERATION_POWMOD:
+                $args = array($left, $right, $mod, $scale);
+                break;
+            case self::OPERATION_SQRT:
+                $args = array($left, $scale);
+                break;
+            case self::OPERATION_MOD:
+                $args = array($left, $right);
+                break;
+            default:
+                $args = array($left, $right, $scale);
         }
 
         $func = self::$operationsMap[$operation];
