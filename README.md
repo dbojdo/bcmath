@@ -9,8 +9,8 @@ Composer: add the **webit/bcmath** into **composer.json**
 ```json
 {
     "require": {
-        "php": ">=5.3.2",
-        "webit/bcmath": "^1.2.0"
+        "php": ">=7.1.0",
+        "webit/bcmath": "^2.0.0"
     }
 }
 ```
@@ -24,7 +24,13 @@ Composer: add the **webit/bcmath** into **composer.json**
 ```
 
 ## Release note
-This version 1.1 breaks a backward compatibility. Since now **BcMathNumber**:
+
+This version 2.0 breaks a backward compatibility. Since now **BcMathNumber**:
+ * is marked `final`
+ * constants are marked `private`
+ * works only for PHP >= 7.1
+
+Version 1.1 breaks a backward compatibility. Since now **BcMathNumber**:
  * is immutable (removed *setValue* method)
  * has no instance property *scale* (removed instance methods *getScale* / *setScale*) as number itself can't have a *scale*
 

@@ -1,8 +1,9 @@
-FROM php:5.4-cli
+FROM php:7.1-cli
 
 RUN apt-get update && apt-get install -y \
        libmcrypt-dev \
        libpq-dev \
+       zlib1g-dev \
        git \
        subversion
 

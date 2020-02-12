@@ -15,7 +15,7 @@
         "psr-4": { "Webit\\Wrapper\\BcMath\\": "tests/" }
     },
     "require": {
-        "php": ">=5.3.3",
+        "php": ">=7.1",
         "ext-bcmath": "*"
     },
     "require-dev": {
@@ -23,7 +23,8 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.x-dev"
+            "dev-1.x": "1.x-dev",
+            "dev-master": "2.x-dev"
         }
     }
 }

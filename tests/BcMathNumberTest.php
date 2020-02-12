@@ -11,7 +11,6 @@ class BcMathNumberTest extends TestCase
         bcscale(BcMathNumber::getDefaultScale());
     }
 
-
     /**
      * @dataProvider twoFloatsAndScale
      * @param string $number1
