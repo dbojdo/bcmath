@@ -259,13 +259,36 @@ final class BcMathNumber
     }
 
     /**
-     *
      * @param string $num
      * @return string
      */
     private static function filterNum($num): string
     {
-        return preg_replace(['/,/', '/[^\-0-9\.]/'], ['.', ''], (string)$num);
+        $num = preg_replace(['/,/', '/[^\-0-9E\.]/i'], ['.', ''], (string)$num);
+
+        return self::convertFromScientificNotation($num);
+    }
+
+    /**
+     * Converts a number from scientific notation if detected
+     *
+     * @param string $number
+     * @return string
+     */
+    private static function convertFromScientificNotation(string $number)
+    {
+        if (!preg_match('/(.*?)E(-?\d+)$/i', $number, $matches)) {
+            return $number;
+        }
+
+        $base = $matches[1];
+        $exponent = $matches[2];
+
+        @list (, $precision) = explode('.', $base);
+        $precision = (strlen($precision) + $exponent * -1);
+        $precision = $precision >= 0 ? $precision : 0;
+
+        return bcmul($base, bcpow(10, $exponent, abs($exponent)), $precision);
     }
 
     /**

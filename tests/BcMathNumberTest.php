@@ -12,6 +12,29 @@ class BcMathNumberTest extends TestCase
     }
 
     /**
+     * @dataProvider scientificNotationExamples
+     * @test
+     */
+    public function itSupportsScientificNotation($inputNumber, $expectedRepresentation)
+    {
+        $this->assertEquals($expectedRepresentation, (string)BcMathNumber::create($inputNumber));
+    }
+
+    public function scientificNotationExamples()
+    {
+        return [
+            ['-6.232E-6', '-0.000006232'],
+            ['-6.232E6', '-6232000'],
+            ['25E2', '2500'],
+            ['-0.25E5', '-25000'],
+            ['-0.254345466766E-5', '-0.00000254345466766'],
+            ['12.322', '12.322'],
+            ['-12.322', '-12.322'],
+            ['12E0', '12']
+        ];
+    }
+
+    /**
      * @dataProvider twoFloatsAndScale
      * @param string $number1
      * @param string $number2
