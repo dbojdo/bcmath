@@ -204,7 +204,7 @@ final class BcMathNumber
     {
         $left = $this->getValue();
         $right = $num instanceof self ? $num->getValue() : self::filterNum($num);
-        $mod = $mod instanceof self ? $num->getValue() : self::filterNum($mod);
+        $mod = $mod instanceof self ? $mod->getValue() : self::filterNum($mod);
         $scale = (int)(null === $scale ? self::$defaultScale : $scale);
 
         switch ($operation) {
