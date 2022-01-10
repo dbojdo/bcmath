@@ -8,7 +8,6 @@
         convertWarningsToExceptions = "true"
         processIsolation            = "false"
         stopOnFailure               = "false"
-        syntaxCheck                 = "false"
         bootstrap                   = "vendor/autoload.php" >
     <testsuites>
         <testsuite name="Main">
@@ -17,9 +16,8 @@
     </testsuites>
 
     <filter>
-        <blacklist>
-            <directory>./tests</directory>
-            <directory>./vendor</directory>
-        </blacklist>
+        <whitelist>
+            <directory>./src</directory>
+        </whitelist>
     </filter>
 </phpunit>
